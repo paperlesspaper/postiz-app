@@ -89,9 +89,13 @@ export async function proxy(request: NextRequest) {
   const org = nextUrl.searchParams.get('org');
   const url = new URL(nextUrl).search;
   if (!nextUrl.pathname.startsWith('/auth') && !authCookie) {
-    if (nextUrl.pathname === '/reels' || nextUrl.pathname.startsWith('/reels/')) {
+    if (
+      nextUrl.pathname === '/reels' ||
+      nextUrl.pathname.startsWith('/reels/')
+    ) {
       const login = new URL('/auth/login', nextUrl.href);
-      login.searchParams.set('returnUrl', nextUrl.href);
+      // Behind nginx, nextUrl.origin can be the internal localhost:4200.
+      login.searchParams.set('returnUrl', nextUrl.pathname + nextUrl.search);
       return NextResponse.redirect(login);
     }
     const providers = ['google', 'settings'];

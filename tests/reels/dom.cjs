@@ -7,6 +7,7 @@ for (const key of [
   'window',
   'document',
   'navigator',
+  'localStorage',
   'HTMLElement',
   'MutationObserver',
 ]) {
