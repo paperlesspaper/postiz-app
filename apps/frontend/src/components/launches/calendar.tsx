@@ -1075,6 +1075,17 @@ const CalendarItem: FC<{
         >
           {post.tags.map((p) => p.tag.name).join(', ')}
         </div>
+        {state === 'DRAFT' && ['instagram', 'instagram-standalone'].includes(post.integration.providerIdentifier) && (
+          <a
+            href={`/reels/${encodeURIComponent(post.id)}`}
+            title={t('reels_handoff', 'Post this Reel yourself')}
+            aria-label={t('reels_handoff', 'Post this Reel yourself')}
+            className="px-1 underline"
+            onClick={(event) => event.stopPropagation()}
+          >
+            {t('reels_menu', 'Reels')}
+          </a>
+        )}
         {copyDebugJson && (
           <div
             className={clsx(

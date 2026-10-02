@@ -578,6 +578,19 @@ export const ManageModal: FC<AddEditModalProps> = (props) => {
                 <div>{t('delete_post', 'Delete Post')}</div>
               </button>
             )}
+            {existingData?.posts?.[0]?.state === 'DRAFT' &&
+              ['instagram', 'instagram-standalone'].includes(
+                integrations.find((item) => item.id === existingData.integration)?.identifier || ''
+              ) && (
+                <a
+                  href={`/reels/${encodeURIComponent(existingData.posts[0].id)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline text-[14px] px-[10px]"
+                >
+                  {t('reels_saved_version', 'Open saved draft on phone')}
+                </a>
+              )}
             <DatePicker onChange={setDate} date={date} />
             {!addEditSets && (
               <button

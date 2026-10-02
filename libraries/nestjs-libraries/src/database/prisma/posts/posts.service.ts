@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   ValidationPipe,
 } from '@nestjs/common';
 import { PostsRepository } from '@gitroom/nestjs-libraries/database/prisma/posts/posts.repository';
@@ -53,6 +54,7 @@ import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { stripHtmlValidation } from '@gitroom/helpers/utils/strip.html.validation';
 import { weightedLength } from '@gitroom/helpers/utils/count.length';
+import { toReelDraft } from '@gitroom/helpers/utils/reel-handoff';
 
 type PostWithConditionals = Post & {
   integration?: Integration;
@@ -72,6 +74,16 @@ export class PostsService {
     private _temporalService: TemporalService,
     private _refreshIntegrationService: RefreshIntegrationService
   ) {}
+
+  async getReelDrafts(orgId: string, id?: string) {
+    const records = await this._postRepository.getReelDrafts(orgId, id);
+    const drafts = records.map(toReelDraft).filter((draft) => !!draft).map((draft) => ({
+      ...draft,
+      content: stripHtmlValidation('normal', draft.content.replace(/<br\s*\/?\s*>/gi, '\n'), true),
+    }));
+    if (id && !drafts.length) throw new NotFoundException('Reel draft not found');
+    return drafts;
+  }
 
   searchForMissingThreeHoursPosts() {
     return this._postRepository.searchForMissingThreeHoursPosts();
