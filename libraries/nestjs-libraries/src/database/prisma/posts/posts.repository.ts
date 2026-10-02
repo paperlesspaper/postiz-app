@@ -33,6 +33,28 @@ export class PostsRepository {
     private _errors: PrismaRepository<'errors'>
   ) {}
 
+  getReelDrafts(orgId: string, id?: string) {
+    return this._post.model.post.findMany({
+      where: {
+        organizationId: orgId,
+        ...(id ? { id } : {}),
+        state: 'DRAFT',
+        parentPostId: null,
+        deletedAt: null,
+        integration: {
+          organizationId: orgId,
+          deletedAt: null,
+          providerIdentifier: { in: ['instagram', 'instagram-standalone'] },
+        },
+      },
+      orderBy: { updatedAt: 'desc' },
+      select: {
+        id: true, state: true, content: true, image: true, settings: true,
+        integration: { select: { name: true, profile: true, providerIdentifier: true } },
+      },
+    });
+  }
+
   searchForMissingThreeHoursPosts() {
     return this._post.model.post.findMany({
       where: {

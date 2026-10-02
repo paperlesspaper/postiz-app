@@ -55,6 +55,17 @@ export const useMenuItem = () => {
       path: '/launches',
     },
     {
+      name: t('reels_menu', 'Reels'),
+      path: '/reels',
+      icon: (
+        <svg width="22" height="24" viewBox="0 0 22 24" fill="none" aria-hidden="true">
+          <rect x="4" y="1.5" width="14" height="21" rx="3" stroke="currentColor" strokeWidth="1.6" />
+          <path d="m9 8 6 4-6 4V8Z" fill="currentColor" />
+          <path d="M9 19.5h4" stroke="currentColor" strokeWidth="1.6" />
+        </svg>
+      ),
+    },
+    {
       name: 'Agent',
       icon: (
         <svg

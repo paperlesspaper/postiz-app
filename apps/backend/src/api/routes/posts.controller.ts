@@ -39,6 +39,16 @@ export class PostsController {
     private _shortLinkService: ShortLinkService
   ) {}
 
+  @Get('/reel-drafts')
+  getReelDrafts(@GetOrgFromRequest() org: Organization) {
+    return this._postsService.getReelDrafts(org.id);
+  }
+
+  @Get('/:id/reel-handoff')
+  async getReelHandoff(@GetOrgFromRequest() org: Organization, @Param('id') id: string) {
+    return (await this._postsService.getReelDrafts(org.id, id))[0];
+  }
+
   @Get('/:id/statistics')
   async getStatistics(
     @GetOrgFromRequest() org: Organization,
